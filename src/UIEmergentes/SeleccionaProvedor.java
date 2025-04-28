@@ -113,27 +113,33 @@ public class SeleccionaProvedor extends javax.swing.JDialog {
         hs.setPreferredSize(new Dimension(0, 12));
     }
     
-    private void cargarProveedores() {
-        try {
-            DefaultTableModel modelo = (DefaultTableModel) tablaProveedores.getModel();
-            modelo.setRowCount(0);
-            
-            List<MostrarProveedor> proveedores = manejoproveedores.obtenerProveedores();
-            
-            for (MostrarProveedor prov : proveedores) {
-                modelo.addRow(new Object[]{
-                    prov.getNombre(),
-                    prov.getTelefono(),
-                    prov.getCorreo(),
-                    prov.getDireccion()
-                });
-            }
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, 
-                "Error al cargar proveedores: " + e.getMessage(), 
-                "Error", JOptionPane.ERROR_MESSAGE);
+private void cargarProveedores() {
+    try {
+        DefaultTableModel modelo = (DefaultTableModel) tablaProveedores.getModel();
+        modelo.setRowCount(0);
+        
+        List<MostrarProveedor> proveedores = manejoproveedores.obtenerProveedores();
+        
+        for (MostrarProveedor prov : proveedores) {
+            modelo.addRow(new Object[]{
+                prov.getNombre(),
+                prov.getTelefono(),
+                prov.getCorreo(),
+                prov.getDireccion(),
+                prov.getEstado() 
+            });
         }
+        
+    
+        if (modelo.getColumnCount() < 5) {
+            modelo.addColumn("Estado");
+        }
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, 
+            "Error al cargar proveedores: " + e.getMessage(), 
+            "Error", JOptionPane.ERROR_MESSAGE);
     }
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
