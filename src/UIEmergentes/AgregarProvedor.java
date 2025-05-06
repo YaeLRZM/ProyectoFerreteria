@@ -431,26 +431,54 @@ public class AgregarProvedor extends javax.swing.JDialog {
     }//GEN-LAST:event_btnCanMouseExited
 
     private void btnCanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanActionPerformed
-// Obtener valores de los componentes de la interfaz
-    String nombreProveedor = nombre.getText();
-    String telefono1 = telefono.getText();
-    String correo1 = correo.getText();
+    // Obtener valores de los componentes de la interfaz
+    String nombreProveedor = nombre.getText().trim();
+    String telefono1 = telefono.getText().trim();
+    String correo1 = correo.getText().trim();
     String estadoProveedor = (String) id_estado1.getSelectedItem();
-    String calle1 = calle.getText();
-    String numero = nCalle.getText();
-    String pueblo1 = pueblo.getText();
-    String municipio1 = municipio.getText();
+    String calle1 = calle.getText().trim();
+    String numero = nCalle.getText().trim();
+    String pueblo1 = pueblo.getText().trim();
+    String municipio1 = municipio.getText().trim();
     String estadoUbicacion = (String) estadoU.getSelectedItem();
-    String codigoPostal = cPostal.getText();
+    String codigoPostal = cPostal.getText().trim();
 
     // Validar campos vacíos
     if (nombreProveedor.isEmpty() || telefono1.isEmpty() || correo1.isEmpty() ||
         estadoProveedor == null || estadoProveedor.isEmpty() ||
         calle1.isEmpty() || numero.isEmpty() || pueblo1.isEmpty() ||
-        municipio1.isEmpty() || estadoUbicacion.isEmpty() || codigoPostal.isEmpty()) {
+        municipio1.isEmpty() || estadoUbicacion == null || estadoUbicacion.isEmpty() || codigoPostal.isEmpty()) {
 
         JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos.",
             "Campos incompletos", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validar que el teléfono contenga solo números y tenga una longitud adecuada (por ejemplo, 10 dígitos en México)
+    if (!telefono1.matches("\\d{10}")) {
+        JOptionPane.showMessageDialog(this, "El teléfono debe contener exactamente 10 dígitos numéricos.",
+            "Teléfono inválido", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validar formato de correo electrónico
+    if (!correo1.matches("^[\\w.-]+@[\\w.-]+\\.\\w{2,}$")) {
+        JOptionPane.showMessageDialog(this, "Formato de correo electrónico inválido.",
+            "Correo inválido", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validar que el número de la calle sea numérico
+    if (!numero.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "El número de la calle debe contener solo números.",
+            "Número de calle inválido", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
+    // Validar que el código postal sea numérico y tenga 5 dígitos
+    if (!codigoPostal.matches("\\d{5}")) {
+        JOptionPane.showMessageDialog(this, "El código postal debe contener exactamente 5 dígitos.",
+            "Código postal inválido", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
@@ -485,6 +513,7 @@ public class AgregarProvedor extends javax.swing.JDialog {
             "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
     }
+
     this.dispose();
     }//GEN-LAST:event_btnCanActionPerformed
 private void limpiarCamposProveedor() {

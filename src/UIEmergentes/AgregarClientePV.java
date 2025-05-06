@@ -564,10 +564,15 @@ public class AgregarClientePV extends javax.swing.JDialog {
             String numero = txtNumeroCasa.getText();
             String rfc;
             if(txtRfc.getText().equals("Ingresa el RFC del cliente") || txtRfc.getText().isEmpty()){
-                rfc = null;
-            }else{
-                rfc = txtRfc.getText();
-            }
+    rfc = null;
+}else{
+    rfc = txtRfc.getText().toUpperCase();
+    if (!rfc.matches("^[A-ZÑ&]{4}\\d{6}[A-Z0-9]{3}$")) {
+        JOptionPane.showMessageDialog(null, "El RFC no tiene un formato válido. Debe tener este formato: MELM8305281H0");
+        return;
+    }
+}
+
             
             
             if(nombreCliente.isEmpty() || nombreCliente.equals("Ingresa un nombre")){

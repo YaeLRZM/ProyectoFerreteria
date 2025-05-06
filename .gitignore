@@ -1,0 +1,14 @@
+# Ignorar directorios de compilación
+build/
+dist/
+nbproject/private/
+
+# Ignorar archivos compilados de Java
+*.class
+*.jar
+
+# Ignorar archivos de IDE (opcional)
+*.iml
+.idea/
+*.ipr
+*.iws

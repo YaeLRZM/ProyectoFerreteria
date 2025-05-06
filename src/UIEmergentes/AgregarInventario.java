@@ -595,23 +595,23 @@ id_provedor.setEditable(false);
     }//GEN-LAST:event_btnCanMouseExited
 
     private void btnCanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCanActionPerformed
-// Obtener valores de los componentes de la interfaz
-    String nombreProducto = nombre.getText();
-    String descripcionProducto = descripcion.getText();
+    // Obtener valores de los componentes de la interfaz
+    String nombreProducto = nombre.getText().trim();
+    String descripcionProducto = descripcion.getText().trim();
     String tipoProducto = (String) id_tipo.getSelectedItem();
-    String codigoProducto = codigo.getText();
-    String precioCompraStr = pCompra.getText();
-    String precioVentaStr = pVenta.getText();
-    String cantidadProductoStr = cantidad.getText();
+    String codigoProducto = codigo.getText().trim();
+    String precioCompraStr = pCompra.getText().trim();
+    String precioVentaStr = pVenta.getText().trim();
+    String cantidadProductoStr = cantidad.getText().trim();
     String unidadMedida = (String) id_medida.getSelectedItem();
-    String fechaIngresoStr = fechaIngreso1.getText();
-    String nombreProveedor = id_provedor.getText(); // Cambiado de ID a nombre
-    String ivaPorcentajeStr = iva.getText();
-    String imagenProducto = imagen.getText();
+    String fechaIngresoStr = fechaIngreso1.getText().trim();
+    String nombreProveedor = id_provedor.getText().trim();
+    String ivaPorcentajeStr = iva.getText().trim();
+    String imagenProducto = imagen.getText().trim();
 
-    // Validar campos vacíos (hacer el proveedor opcional)
+    // Validar campos vacíos (hacer el proveedor e imagen opcionales)
     if (nombreProducto.isEmpty() || descripcionProducto.isEmpty() || tipoProducto == null || tipoProducto.isEmpty() ||
-        codigoProducto.isEmpty() || precioCompraStr.isEmpty() || precioVentaStr.isEmpty() || 
+        codigoProducto.isEmpty() || precioCompraStr.isEmpty() || precioVentaStr.isEmpty() ||
         cantidadProductoStr.isEmpty() || unidadMedida == null || unidadMedida.isEmpty() ||
         fechaIngresoStr.isEmpty() || ivaPorcentajeStr.isEmpty()) {
 
@@ -620,62 +620,98 @@ id_provedor.setEditable(false);
         return;
     }
 
+    // Validar que el código de barras solo contenga dígitos
+    if (!codigoProducto.matches("\\d+")) {
+        JOptionPane.showMessageDialog(this, "El código de barras debe contener solo números.",
+            "Código inválido", JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
     // Crear instancia del DAO dentro del método
     InsertarProducto dao = new InsertarProducto();
 
     try {
-        // Convertir los datos numéricos y la fecha
+        // Convertir los datos numéricos y validar sus rangos
         float precioCompra = Float.parseFloat(precioCompraStr);
         float precioVenta = Float.parseFloat(precioVentaStr);
         int cantidadProducto = Integer.parseInt(cantidadProductoStr);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date fechaIngreso = sdf.parse(fechaIngresoStr);
         float ivaPorcentaje = Float.parseFloat(ivaPorcentajeStr);
 
-        // Validar código de barras único
-        if (dao.codigoBarrasExiste(codigoProducto)) {
-            JOptionPane.showMessageDialog(this, "El código de barras ya existe", 
-                "Error", JOptionPane.ERROR_MESSAGE);
+        if (precioCompra <= 0) {
+            JOptionPane.showMessageDialog(this, "El precio de compra debe ser mayor que 0.",
+                "Precio inválido", JOptionPane.WARNING_MESSAGE);
             return;
         }
 
-        // Llamar al método para insertar el producto (ahora con nombre de proveedor)
+        if (precioVenta <= 0) {
+            JOptionPane.showMessageDialog(this, "El precio de venta debe ser mayor que 0.",
+                "Precio inválido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (cantidadProducto < 0) {
+            JOptionPane.showMessageDialog(this, "La cantidad no puede ser negativa.",
+                "Cantidad inválida", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        if (ivaPorcentaje < 0 || ivaPorcentaje > 100) {
+            JOptionPane.showMessageDialog(this, "El IVA debe ser un porcentaje entre 0 y 100.",
+                "IVA inválido", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        // Validar formato de fecha
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        sdf.setLenient(false); // Para evitar fechas como 2025-02-30
+        Date fechaIngreso = sdf.parse(fechaIngresoStr);
+
+        // Validar código de barras único
+        if (dao.codigoBarrasExiste(codigoProducto)) {
+            JOptionPane.showMessageDialog(this, "El código de barras ya existe.",
+                "Código duplicado", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // Llamar al método para insertar el producto (nombreProveedor e imagen opcionales)
         boolean exito = dao.insertarProductoCompleto(
-                nombreProducto, 
-                descripcionProducto, 
-                tipoProducto, 
-                codigoProducto,
-                precioCompra, 
-                precioVenta, 
-                cantidadProducto,
-                unidadMedida, 
-                fechaIngreso, 
-                nombreProveedor.isEmpty() ? null : nombreProveedor, // Envía null si está vacío
-                ivaPorcentaje, 
-                imagenProducto.isEmpty() ? null : imagenProducto); // Imagen opcional
-        
+            nombreProducto,
+            descripcionProducto,
+            tipoProducto,
+            codigoProducto,
+            precioCompra,
+            precioVenta,
+            cantidadProducto,
+            unidadMedida,
+            fechaIngreso,
+            nombreProveedor.isEmpty() ? null : nombreProveedor,
+            ivaPorcentaje,
+            imagenProducto.isEmpty() ? null : imagenProducto
+        );
+
         if (exito) {
-            JOptionPane.showMessageDialog(this, "Producto agregado exitosamente", 
+            JOptionPane.showMessageDialog(this, "Producto agregado exitosamente.",
                 "Éxito", JOptionPane.INFORMATION_MESSAGE);
             limpiarCampos();
         } else {
-            JOptionPane.showMessageDialog(this, "Error al agregar el producto", 
+            JOptionPane.showMessageDialog(this, "Error al agregar el producto.",
                 "Error", JOptionPane.ERROR_MESSAGE);
         }
     } catch (SQLException ex) {
         JOptionPane.showMessageDialog(this, 
-            "Error de base de datos: " + ex.getMessage(), 
+            "Error de base de datos: " + ex.getMessage(),
             "Error", JOptionPane.ERROR_MESSAGE);
         ex.printStackTrace();
     } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Formato numérico incorrecto: " + ex.getMessage(), 
-            "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+            "Formato numérico incorrecto: " + ex.getMessage(),
+            "Error de formato", JOptionPane.ERROR_MESSAGE);
     } catch (ParseException ex) {
-        JOptionPane.showMessageDialog(this, 
-            "Formato de fecha incorrecto. Use yyyy-MM-dd", 
-            "Error", JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(this,
+            "Formato de fecha incorrecto. Usa yyyy-MM-dd.",
+            "Fecha inválida", JOptionPane.ERROR_MESSAGE);
     }
+    
     this.dispose();
     }//GEN-LAST:event_btnCanActionPerformed
 private void limpiarCampos() {
