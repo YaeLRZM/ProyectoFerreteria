@@ -77,8 +77,6 @@ id_provedor.setEditable(false);
         id_tipo = new javax.swing.JComboBox<>();
         descripcion = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        iva = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         codigo = new javax.swing.JTextField();
         barra = new javax.swing.JLabel();
@@ -202,26 +200,6 @@ id_provedor.setEditable(false);
         jLabel6.setText("Descripcion del producto");
         jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 60, -1, -1));
 
-        jLabel7.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
-        jLabel7.setText("IVA");
-        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, -1, 20));
-
-        iva.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
-        iva.setForeground(new java.awt.Color(102, 102, 102));
-        iva.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        iva.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 2));
-        iva.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                ivaMouseClicked(evt);
-            }
-        });
-        iva.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ivaActionPerformed(evt);
-            }
-        });
-        jPanel1.add(iva, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 450, 211, 34));
-
         jLabel8.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel8.setText("Tipo de producto");
         jPanel1.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 130, -1, 20));
@@ -242,7 +220,7 @@ id_provedor.setEditable(false);
 
         jLabel11.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel11.setText("Porcentaje de ganancia");
-        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 430, -1, 20));
+        jPanel1.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 430, -1, 20));
 
         pGanancia.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         pGanancia.setForeground(new java.awt.Color(102, 102, 102));
@@ -258,7 +236,7 @@ id_provedor.setEditable(false);
                 pGananciaActionPerformed(evt);
             }
         });
-        jPanel1.add(pGanancia, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 450, 211, 34));
+        jPanel1.add(pGanancia, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 450, 211, 34));
 
         jLabel12.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel12.setText("Unidad de medida");
@@ -417,7 +395,7 @@ id_provedor.setEditable(false);
 
         jLabel16.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel16.setText("Generacion de precio de venta");
-        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 360, -1, 20));
+        jPanel1.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 390, -1, 20));
 
         pVenta.setFont(new java.awt.Font("Ebrima", 0, 12)); // NOI18N
         pVenta.setForeground(new java.awt.Color(102, 102, 102));
@@ -428,7 +406,7 @@ id_provedor.setEditable(false);
                 pVentaActionPerformed(evt);
             }
         });
-        jPanel1.add(pVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 380, 211, 34));
+        jPanel1.add(pVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 420, 211, 34));
 
         jLabel14.setFont(new java.awt.Font("Century Gothic", 1, 12)); // NOI18N
         jLabel14.setText("Carga una imagen ");
@@ -566,10 +544,6 @@ id_provedor.setEditable(false);
         // TODO add your handling code here:
     }//GEN-LAST:event_descripcionActionPerformed
 
-    private void ivaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ivaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_ivaActionPerformed
-
     private void codigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_codigoActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_codigoActionPerformed
@@ -606,14 +580,13 @@ id_provedor.setEditable(false);
     String unidadMedida = (String) id_medida.getSelectedItem();
     String fechaIngresoStr = fechaIngreso1.getText().trim();
     String nombreProveedor = id_provedor.getText().trim();
-    String ivaPorcentajeStr = iva.getText().trim();
     String imagenProducto = imagen.getText().trim();
 
     // Validar campos vacíos (hacer el proveedor e imagen opcionales)
     if (nombreProducto.isEmpty() || descripcionProducto.isEmpty() || tipoProducto == null || tipoProducto.isEmpty() ||
         codigoProducto.isEmpty() || precioCompraStr.isEmpty() || precioVentaStr.isEmpty() ||
         cantidadProductoStr.isEmpty() || unidadMedida == null || unidadMedida.isEmpty() ||
-        fechaIngresoStr.isEmpty() || ivaPorcentajeStr.isEmpty()) {
+        fechaIngresoStr.isEmpty()) {
 
         JOptionPane.showMessageDialog(this, "Por favor, rellena todos los campos obligatorios.",
             "Campos incompletos", JOptionPane.WARNING_MESSAGE);
@@ -635,7 +608,6 @@ id_provedor.setEditable(false);
         float precioCompra = Float.parseFloat(precioCompraStr);
         float precioVenta = Float.parseFloat(precioVentaStr);
         int cantidadProducto = Integer.parseInt(cantidadProductoStr);
-        float ivaPorcentaje = Float.parseFloat(ivaPorcentajeStr);
 
         if (precioCompra <= 0) {
             JOptionPane.showMessageDialog(this, "El precio de compra debe ser mayor que 0.",
@@ -655,11 +627,6 @@ id_provedor.setEditable(false);
             return;
         }
 
-        if (ivaPorcentaje < 0 || ivaPorcentaje > 100) {
-            JOptionPane.showMessageDialog(this, "El IVA debe ser un porcentaje entre 0 y 100.",
-                "IVA inválido", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
 
         // Validar formato de fecha
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -685,7 +652,6 @@ id_provedor.setEditable(false);
             unidadMedida,
             fechaIngreso,
             nombreProveedor.isEmpty() ? null : nombreProveedor,
-            ivaPorcentaje,
             imagenProducto.isEmpty() ? null : imagenProducto
         );
 
@@ -722,7 +688,6 @@ private void limpiarCampos() {
     pVenta.setText("");
     cantidad.setText("");
     id_provedor.setText("");
-    iva.setText("");
     imagen.setText("");
     fechaIngreso1.setText("");
     id_tipo.setSelectedIndex(0);
@@ -749,18 +714,11 @@ descripcion.setText("");        // TODO add your handling code here:
         // TODO add your handling code here:
     }//GEN-LAST:event_id_tipoActionPerformed
 
-    private void ivaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_ivaMouseClicked
-iva.setText("");          // TODO add your handling code here:
-    }//GEN-LAST:event_ivaMouseClicked
-
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 double precioCompra = Double.parseDouble(pCompra.getText());
 double porcentajeGanancia = Double.parseDouble(pGanancia.getText());
-double ivaValor = Double.parseDouble(iva.getText());
 
-double gananciaSi = precioCompra * (1 + (porcentajeGanancia / 100));
-
-double gananciaCi = gananciaSi * (1 + (ivaValor / 100)); 
+double gananciaCi = precioCompra / (1 -(porcentajeGanancia/100)); 
 
 pVenta.setText(String.format("%.2f", gananciaCi)); 
     }//GEN-LAST:event_jButton1ActionPerformed
@@ -957,7 +915,6 @@ mTotal.setText("");         // TODO add your handling code here:
     private javax.swing.JTextField id_provedor;
     private javax.swing.JComboBox<String> id_tipo;
     private javax.swing.JTextField imagen;
-    private javax.swing.JTextField iva;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
@@ -975,7 +932,6 @@ mTotal.setText("");         // TODO add your handling code here:
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTextField mTotal;
